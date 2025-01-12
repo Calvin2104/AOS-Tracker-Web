@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cheeseburger Counter</title>
     <link rel="stylesheet" href="styles.css">
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script>
+        // Your web app's Firebase configuration
+        const firebaseConfig = {
+  apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
+  authDomain: "aos-tracker-web.firebaseapp.com",
+  projectId: "aos-tracker-web",
+  storageBucket: "aos-tracker-web.firebasestorage.app",
+  messagingSenderId: "75216173221",
+  appId: "1:75216173221:web:9285e0cc5d87af0daf754c",
+  measurementId: "G-MBN4PE645R"
+};
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+    </script>
 </head>
 <body>
     <div class="container">
