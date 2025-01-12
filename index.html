@@ -6,22 +6,33 @@
     <title>Cheeseburger Counter</title>
     <link rel="stylesheet" href="styles.css">
     <!-- Add Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script>
-        // Your web app's Firebase configuration
+    <script type="module">
+        // Your Firebase configuration and initialization code here
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
         const firebaseConfig = {
-  apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
-  authDomain: "aos-tracker-web.firebaseapp.com",
-  projectId: "aos-tracker-web",
-  storageBucket: "aos-tracker-web.firebasestorage.app",
-  messagingSenderId: "75216173221",
-  appId: "1:75216173221:web:9285e0cc5d87af0daf754c",
-  measurementId: "G-MBN4PE645R"
-};
+      apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
+      authDomain: "aos-tracker-web.firebaseapp.com",
+      projectId: "aos-tracker-web",
+      storageBucket: "aos-tracker-web.firebasestorage.app",
+      messagingSenderId: "75216173221",
+      appId: "1:75216173221:web:9285e0cc5d87af0daf754c",
+      measurementId: "G-MBN4PE645R"
+    };
+        
         // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Example Firestore operations
+        async function fetchStaff() {
+            const snapshot = await getDocs(collection(db, 'staff'));
+            const staffList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log(staffList);
+        }
+
+        fetchStaff();
     </script>
 </head>
 <body>
@@ -51,6 +62,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js" type="module"></script>
 </body>
 </html>
