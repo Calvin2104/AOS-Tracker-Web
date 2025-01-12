@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cheeseburger Counter</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Cheeseburger Counter</h1>
+
+        <div class="staff-input">
+            <input type="text" id="staffName" placeholder="Enter staff name">
+            <button onclick="addStaff()">Add Staff</button>
+        </div>
+
+        <div id="staffCounters"></div>
+
+        <button onclick="toggleAdminMenu()">Admin Menu</button>
+
+        <div id="adminMenu" style="display: none;">
+            <h2>Admin Menu</h2>
+            <input type="password" id="adminPassword" placeholder="Enter admin password">
+            <button onclick="verifyPassword()">Login</button>
+            <div id="adminControls" style="display: none;">
+                <h3>Edit Profile</h3>
+                <input type="text" id="editStaffName" placeholder="Enter current staff name">
+                <input type="text" id="newStaffName" placeholder="Enter new staff name (optional)">
+                <input type="number" id="editSoldCount" placeholder="Enter sold count">
+                <button onclick="editProfile()">Edit</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
