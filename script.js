@@ -1,22 +1,37 @@
-// Initialize Firestore
-const db = firebase.firestore();
+// script.js
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
+  authDomain: "aos-tracker-web.firebaseapp.com",
+  projectId: "aos-tracker-web",
+  storageBucket: "aos-tracker-web.firebasestorage.app",
+  messagingSenderId: "75216173221",
+  appId: "1:75216173221:web:9285e0cc5d87af0daf754c",
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 async function fetchStaff() {
-    const snapshot = await db.collection('staff').get();
-    const staff = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return staff;
+    const snapshot = await getDocs(collection(db, 'staff'));
+    const staffList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+    return staffList;
 }
 
 async function saveStaff(staff) {
-    const docRef = await db.collection('staff').add(staff);
+    const docRef = await addDoc(collection(db, 'staff'), staff);
     const doc = await docRef.get();
     return { id: doc.id, ...doc.data() };
 }
 
 async function updateStaff(id, staff) {
-    await db.collection('staff').doc(id).update(staff);
-    const doc = await db.collection('staff').doc(id).get();
-    return { id: doc.id, ...doc.data() };
+    const staffDoc = doc(db, 'staff', id);
+    await updateDoc(staffDoc, staff);
+    const updatedDoc = await getDoc(staffDoc);
+    return { id: updatedDoc.id, ...updatedDoc.data() };
 }
 
 let staffCounters = {};
