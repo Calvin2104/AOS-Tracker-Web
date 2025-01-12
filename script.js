@@ -1,24 +1,6 @@
-import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
-    authDomain: "aos-tracker-web.firebaseapp.com",
-    projectId: "aos-tracker-web",
-    storageBucket: "aos-tracker-web.firebasestorage.app",
-    messagingSenderId: "75216173221",
-    appId: "1:75216173221:web:9285e0cc5d87af0daf754c"
-};
-
-// Initialize Firebase if not already initialized
-let app;
-if (!getApps().length) {
-    app = initializeApp(firebaseConfig);
-} else {
-    app = getApps()[0];
-}
-
-const db = getFirestore(app);
+const db = window.db;
 
 async function fetchStaff() {
     const snapshot = await getDocs(collection(db, 'staff'));
@@ -47,6 +29,12 @@ document.addEventListener('DOMContentLoaded', async () => {
         staffCounters[member.name] = member.sold_count;
     });
     updateCounters();
+
+    // Set up event listeners
+    document.getElementById('addStaffButton').addEventListener('click', addStaff);
+    document.getElementById('adminMenuButton').addEventListener('click', toggleAdminMenu);
+    document.getElementById('verifyPasswordButton').addEventListener('click', verifyPassword);
+    document.getElementById('editProfileButton').addEventListener('click', editProfile);
 });
 
 async function addStaff() {
@@ -61,27 +49,17 @@ async function addStaff() {
     document.getElementById('staffName').value = '';
 }
 
-async function incrementCounter(name) {
-    if (staffCounters.hasOwnProperty(name)) {
-        staffCounters[name]++;
-        const staff = await fetchStaff();
-        const member = staff.find(member => member.name === name);
-        await updateStaff(member.id, { name, sold_count: staffCounters[name] });
-        updateCounters();
-    }
+function toggleAdminMenu() {
+    const adminMenu = document.getElementById('adminMenu');
+    adminMenu.style.display = adminMenu.style.display === 'none' ? 'block' : 'none';
 }
 
-function updateCounters() {
-    const staffCountersDiv = document.getElementById('staffCounters');
-    staffCountersDiv.innerHTML = '';
-    for (const [name, count] of Object.entries(staffCounters)) {
-        const counterDiv = document.createElement('div');
-        counterDiv.className = 'counter';
-        counterDiv.innerHTML = `
-            <span>${name}: ${count} cheeseburgers sold</span>
-            <button onclick="incrementCounter('${name}')">+</button>
-        `;
-        staffCountersDiv.appendChild(counterDiv);
+function verifyPassword() {
+    const password = document.getElementById('adminPassword').value;
+    if (password === 'admin123') { // Simplified password check for demonstration
+        document.getElementById('adminControls').style.display = 'block';
+    } else {
+        alert('Incorrect password.');
     }
 }
 
@@ -115,11 +93,29 @@ async function editProfile() {
     document.getElementById('editSoldCount').value = '';
 }
 
-document.addEventListener('DOMContentLoaded', async () => {
-    await fetchStaff();
-    updateCounters();
-    scheduleMidnightReset();
-});
+function updateCounters() {
+    const staffCountersDiv = document.getElementById('staffCounters');
+    staffCountersDiv.innerHTML = '';
+    for (const [name, count] of Object.entries(staffCounters)) {
+        const counterDiv = document.createElement('div');
+        counterDiv.className = 'counter';
+        counterDiv.innerHTML = `
+            <span>${name}: ${count} cheeseburgers sold</span>
+            <button onclick="incrementCounter('${name}')">+</button>
+        `;
+        staffCountersDiv.appendChild(counterDiv);
+    }
+}
+
+async function incrementCounter(name) {
+    if (staffCounters.hasOwnProperty(name)) {
+        staffCounters[name]++;
+        const staff = await fetchStaff();
+        const member = staff.find(member => member.name === name);
+        await updateStaff(member.id, { name, sold_count: staffCounters[name] });
+        updateCounters();
+    }
+}
 
 async function clearTallies() {
     const staff = await fetchStaff();
