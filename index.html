@@ -5,8 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cheeseburger Counter</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Add Firebase SDK -->
-    <script type="module" src="script.js"></script>
+    <!-- Import Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-analytics.js';
+        import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
+            authDomain: "aos-tracker-web.firebaseapp.com",
+            projectId: "aos-tracker-web",
+            storageBucket: "aos-tracker-web.firebasestorage.app",
+            messagingSenderId: "75216173221D",
+            appId: "1:75216173221:web:9285e0cc5d87af0daf754c",
+            measurementId: "G-MBN4PE645R"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const db = getFirestore(app);
+
+        window.firebaseApp = app;
+        window.db = db;
+    </script>
 </head>
 <body>
     <div class="container">
@@ -14,25 +36,26 @@
 
         <div class="staff-input">
             <input type="text" id="staffName" placeholder="Enter staff name">
-            <button onclick="addStaff()">Add Staff</button>
+            <button id="addStaffButton">Add Staff</button>
         </div>
 
         <div id="staffCounters"></div>
 
-        <button onclick="toggleAdminMenu()">Admin Menu</button>
+        <button id="adminMenuButton">Admin Menu</button>
 
         <div id="adminMenu" style="display: none;">
             <h2>Admin Menu</h2>
             <input type="password" id="adminPassword" placeholder="Enter admin password">
-            <button onclick="verifyPassword()">Login</button>
+            <button id="verifyPasswordButton">Login</button>
             <div id="adminControls" style="display: none;">
                 <h3>Edit Profile</h3>
                 <input type="text" id="editStaffName" placeholder="Enter current staff name">
                 <input type="text" id="newStaffName" placeholder="Enter new staff name (optional)">
                 <input type="number" id="editSoldCount" placeholder="Enter sold count">
-                <button onclick="editProfile()">Edit</button>
+                <button id="editProfileButton">Edit</button>
             </div>
         </div>
     </div>
+    <script type="module" src="script.js"></script>
 </body>
 </html>
