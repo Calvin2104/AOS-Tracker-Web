@@ -9,7 +9,6 @@ const firebaseConfig = {
     storageBucket: "aos-tracker-web.firebasestorage.app",
     messagingSenderId: "75216173221",
     appId: "1:75216173221:web:9285e0cc5d87af0daf754c"
-    measurementId: "G-MBN4PE645R"
 };
 
 // Initialize Firebase if not already initialized
