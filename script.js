@@ -1,47 +1,16 @@
-import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+let staffCounters = JSON.parse(localStorage.getItem('staffCounters')) || {};
 
-const db = window.db;
-
-async function fetchStaff() {
-    const snapshot = await getDocs(collection(db, 'staff'));
-    const staffList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-    return staffList;
+// Function to save the current state of staffCounters to localStorage
+function saveToLocalStorage() {
+    localStorage.setItem('staffCounters', JSON.stringify(staffCounters));
 }
 
-async function saveStaff(staff) {
-    const docRef = await addDoc(collection(db, 'staff'), staff);
-    const doc = await docRef.get();
-    return { id: doc.id, ...doc.data() };
-}
-
-async function updateStaff(id, staff) {
-    const staffDoc = doc(db, 'staff', id);
-    await updateDoc(staffDoc, staff);
-    const updatedDoc = await getDoc(staffDoc);
-    return { id: updatedDoc.id, ...updatedDoc.data() };
-}
-
-let staffCounters = {};
-
-document.addEventListener('DOMContentLoaded', async () => {
-    const staff = await fetchStaff();
-    staff.forEach(member => {
-        staffCounters[member.name] = member.sold_count;
-    });
-    updateCounters();
-
-    // Set up event listeners
-    document.getElementById('addStaffButton').addEventListener('click', addStaff);
-    document.getElementById('adminMenuButton').addEventListener('click', toggleAdminMenu);
-    document.getElementById('verifyPasswordButton').addEventListener('click', verifyPassword);
-    document.getElementById('editProfileButton').addEventListener('click', editProfile);
-});
-
-async function addStaff() {
+// Function to add a new staff member
+function addStaff() {
     const staffName = document.getElementById('staffName').value.trim();
     if (staffName && !staffCounters.hasOwnProperty(staffName)) {
-        const newStaff = await saveStaff({ name: staffName, sold_count: 0 });
-        staffCounters[newStaff.name] = newStaff.sold_count;
+        staffCounters[staffName] = 0;
+        saveToLocalStorage();  // Save to localStorage
         updateCounters();
     } else {
         alert('Please enter a unique staff name.');
@@ -49,40 +18,64 @@ async function addStaff() {
     document.getElementById('staffName').value = '';
 }
 
+// Function to increment the counter for a staff member
+function incrementCounter(staffName) {
+    if (staffCounters.hasOwnProperty(staffName)) {
+        staffCounters[staffName]++;
+        saveToLocalStorage();  // Save to localStorage
+        updateCounters();
+    }
+}
+
+// Function to update the display of counters
+function updateCounters() {
+    const staffCountersDiv = document.getElementById('staffCounters');
+    staffCountersDiv.innerHTML = '';
+    for (const [staffName, count] of Object.entries(staffCounters)) {
+        const counterDiv = document.createElement('div');
+        counterDiv.className = 'counter';
+        counterDiv.innerHTML = `
+            <span>${staffName}: ${count} cheeseburgers sold</span>
+            <button onclick="incrementCounter('${staffName}')">+</button>
+        `;
+        staffCountersDiv.appendChild(counterDiv);
+    }
+}
+
+// Function to toggle the admin menu visibility
 function toggleAdminMenu() {
     const adminMenu = document.getElementById('adminMenu');
     adminMenu.style.display = adminMenu.style.display === 'none' ? 'block' : 'none';
 }
 
+// Function to verify the admin password
 function verifyPassword() {
     const password = document.getElementById('adminPassword').value;
-    if (password === 'admin123') { // Simplified password check for demonstration
+    if (password === 'admin') {
         document.getElementById('adminControls').style.display = 'block';
+        document.getElementById('adminPassword').value = '';
     } else {
-        alert('Incorrect password.');
+        alert('Incorrect password');
     }
 }
 
-async function editProfile() {
-    const currentName = document.getElementById('editStaffName').value.trim();
-    const newName = document.getElementById('newStaffName').value.trim();
-    const soldCount = parseInt(document.getElementById('editSoldCount').value, 10);
+// Function to edit a profile
+function editProfile() {
+    const currentStaffName = document.getElementById('editStaffName').value.trim();
+    const newStaffName = document.getElementById('newStaffName').value.trim();
+    const soldCount = parseInt(document.getElementById('editSoldCount').value);
 
-    if (currentName && staffCounters.hasOwnProperty(currentName)) {
-        const staff = await fetchStaff();
-        const member = staff.find(member => member.name === currentName);
-        
+    if (currentStaffName && staffCounters.hasOwnProperty(currentStaffName)) {
         if (!isNaN(soldCount)) {
-            staffCounters[currentName] = soldCount;
+            staffCounters[currentStaffName] = soldCount;
         }
 
-        if (newName && !staffCounters.hasOwnProperty(newName)) {
-            delete staffCounters[currentName];
-            staffCounters[newName] = soldCount;
-            await updateStaff(member.id, { name: newName, sold_count: soldCount });
-        } else {
-            await updateStaff(member.id, { name: currentName, sold_count: soldCount });
+        if (newStaffName && !staffCounters.hasOwnProperty(newStaffName)) {
+            staffCounters[newStaffName] = staffCounters[currentStaffName];
+            delete staffCounters[currentStaffName];
         }
+
+        saveToLocalStorage();  // Save to localStorage
         updateCounters();
     } else {
         alert('Please enter a valid current staff name.');
@@ -93,44 +86,31 @@ async function editProfile() {
     document.getElementById('editSoldCount').value = '';
 }
 
-function updateCounters() {
-    const staffCountersDiv = document.getElementById('staffCounters');
-    staffCountersDiv.innerHTML = '';
-    for (const [name, count] of Object.entries(staffCounters)) {
-        const counterDiv = document.createElement('div');
-        counterDiv.className = 'counter';
-        counterDiv.innerHTML = `
-            <span>${name}: ${count} cheeseburgers sold</span>
-            <button onclick="incrementCounter('${name}')">+</button>
-        `;
-        staffCountersDiv.appendChild(counterDiv);
+// Function to clear tallies at midnight
+function clearTallies() {
+    for (const staffName in staffCounters) {
+        if (staffCounters.hasOwnProperty(staffName)) {
+            staffCounters[staffName] = 0;  // Reset tally to 0
+        }
     }
+    saveToLocalStorage();  // Save the changes to localStorage
+    updateCounters();  // Update the display
+    scheduleMidnightReset();  // Schedule the next reset
 }
 
-async function incrementCounter(name) {
-    if (staffCounters.hasOwnProperty(name)) {
-        staffCounters[name]++;
-        const staff = await fetchStaff();
-        const member = staff.find(member => member.name === name);
-        await updateStaff(member.id, { name, sold_count: staffCounters[name] });
-        updateCounters();
-    }
-}
-
-async function clearTallies() {
-    const staff = await fetchStaff();
-    for (const member of staff) {
-        await updateStaff(member.id, { name: member.name, sold_count: 0 });
-    }
-    staffCounters = {};
-    updateCounters();
-    scheduleMidnightReset();
-}
-
+// Function to schedule the reset at midnight
 function scheduleMidnightReset() {
     const now = new Date();
     const midnight = new Date();
-    midnight.setHours(24, 0, 0, 0);
-    const timeUntilMidnight = midnight.getTime() - now.getTime();
-    setTimeout(clearTallies, timeUntilMidnight);
+    midnight.setHours(24, 0, 0, 0);  // Set to next midnight
+
+    const timeUntilMidnight = midnight.getTime() - now.getTime();  // Calculate time until midnight
+
+    setTimeout(clearTallies, timeUntilMidnight);  // Schedule the reset
 }
+
+// Schedule the first reset when the script is loaded
+document.addEventListener('DOMContentLoaded', () => {
+    updateCounters();  // Ensure counters are updated on page load
+    scheduleMidnightReset();  // Schedule the midnight reset
+});
