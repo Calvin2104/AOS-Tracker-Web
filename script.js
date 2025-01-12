@@ -1,18 +1,26 @@
-// script.js
-import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+import { initializeApp, getApps } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
 import { getFirestore, collection, getDocs, addDoc, updateDoc, doc } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
-  authDomain: "aos-tracker-web.firebaseapp.com",
-  projectId: "aos-tracker-web",
-  storageBucket: "aos-tracker-web.firebasestorage.app",
-  messagingSenderId: "75216173221",
-  appId: "1:75216173221:web:9285e0cc5d87af0daf754c",
+    apiKey: "AIzaSyAUM136UaVHKBbcvCV6LOEfG-QkSAkjtsA",
+    authDomain: "aos-tracker-web.firebaseapp.com",
+    projectId: "aos-tracker-web",
+    storageBucket: "aos-tracker-web.firebasestorage.app",
+    messagingSenderId: "75216173221",
+    appId: "1:75216173221:web:9285e0cc5d87af0daf754c"
+    measurementId: "G-MBN4PE645R"
 };
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+// Initialize Firebase if not already initialized
+let app;
+if (!getApps().length) {
+    app = initializeApp(firebaseConfig);
+} else {
+    app = getApps()[0];
+}
+
 const db = getFirestore(app);
 
 async function fetchStaff() {
