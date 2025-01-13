@@ -174,7 +174,7 @@ function showLeaderboard() {
     if (leaderboardMode === 'total') {
         leaderboard = Object.entries(staffCounters)
             .sort((a, b) => (b[1].cheeseburgers + b[1].applePies + b[1].hashBrowns + b[1].coffees) - (a[1].cheeseburgers + a[1].applePies + a[1].hashBrowns + a[1].coffees))
-            .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers} cheeseburgers, ${counts.applePies} apple pies, ${counts.hashBrowns} hash browns, ${counts.coffees} standard coffees sold`)
+            .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers + counts.applePies + counts.hashBrowns + counts.coffees} items sold`)
             .join('\n');
     } else {
         leaderboard = Object.entries(staffCounters)
