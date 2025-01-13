@@ -119,6 +119,12 @@ function toggleAdminMenu() {
     }
 }
 
+// Function to toggle the leaderboard menu visibility
+function showLeaderboardMenu() {
+    const leaderboardMenu = document.getElementById('leaderboardMenu');
+    leaderboardMenu.style.display = leaderboardMenu.style.display === 'none' ? 'block' : 'none';
+}
+
 // Function to verify the admin password
 function verifyPassword() {
     const password = document.getElementById('adminPassword').value;
