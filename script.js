@@ -10,37 +10,43 @@ function saveToLocalStorage() {
 function addStaff() {
     const staffName = document.getElementById('staffName').value.trim();
     if (staffName && !staffCounters.hasOwnProperty(staffName)) {
-        staffCounters[staffName] = 0;
+        staffCounters[staffName] = {
+            cheeseburgers: 0,
+            applePies: 0,
+            hashBrowns: 0,
+            coffees: 0
+        };
         saveToLocalStorage();  // Save to localStorage
         updateCounters();
         updateStaffSelect();
+        updateProfileSelect();
     } else {
         alert('Please enter a unique staff name.');
     }
     document.getElementById('staffName').value = '';
 }
 
-// Function to increment the counter for a staff member
-function incrementCounter(staffName) {
-    if (staffCounters.hasOwnProperty(staffName)) {
-        staffCounters[staffName]++;
-        saveToLocalStorage();  // Save to localStorage
-        updateCounters();
-    }
-}
-
 // Function to update the display of counters
 function updateCounters() {
-    const staffCountersDiv = document.getElementById('staffCounters');
-    staffCountersDiv.innerHTML = '';
-    for (const [staffName, count] of Object.entries(staffCounters)) {
-        const counterDiv = document.createElement('div');
-        counterDiv.className = 'counter';
-        counterDiv.innerHTML = `
-            <span>${staffName}: ${count} cheeseburgers sold</span>
-            <button onclick="incrementCounter('${staffName}')">+</button>
+    const profileSelect = document.getElementById('profileSelect');
+    const selectedProfile = profileSelect.value;
+    updateProfileDisplay(selectedProfile);
+}
+
+// Function to update the profile display
+function updateProfileDisplay(selectedProfile) {
+    const profileDisplay = document.getElementById('profileDisplay');
+    profileDisplay.innerHTML = '';
+
+    if (selectedProfile && staffCounters.hasOwnProperty(selectedProfile)) {
+        const { cheeseburgers, applePies, hashBrowns, coffees } = staffCounters[selectedProfile];
+        profileDisplay.innerHTML = `
+            <div><strong>${selectedProfile}</strong></div>
+            <div>Cheeseburgers: ${cheeseburgers}</div>
+            <div>Apple Pies: ${applePies}</div>
+            <div>Hash Browns: ${hashBrowns}</div>
+            <div>Standard Coffees: ${coffees}</div>
         `;
-        staffCountersDiv.appendChild(counterDiv);
     }
 }
 
@@ -57,16 +63,35 @@ function updateStaffSelect() {
     }
 }
 
+// Function to update the profile selection dropdown
+function updateProfileSelect() {
+    const profileSelect = document.getElementById('profileSelect');
+    profileSelect.innerHTML = '<option value="">Select Profile</option>';
+
+    for (const staffName of Object.keys(staffCounters)) {
+        const option = document.createElement('option');
+        option.value = staffName;
+        option.textContent = staffName;
+        profileSelect.appendChild(option);
+    }
+}
+
 // Function to update the selected staff member
 function updateSelectedStaff() {
     const staffSelect = document.getElementById('staffSelect');
     const selectedStaff = staffSelect.value;
-    const editSoldCount = document.getElementById('editSoldCount');
 
-    if (selectedStaff) {
-        editSoldCount.value = staffCounters[selectedStaff];
+    if (selectedStaff && staffCounters.hasOwnProperty(selectedStaff)) {
+        const { cheeseburgers, applePies, hashBrowns, coffees } = staffCounters[selectedStaff];
+        document.getElementById('editCheeseburgersSold').value = cheeseburgers;
+        document.getElementById('editApplePiesSold').value = applePies;
+        document.getElementById('editHashBrownsSold').value = hashBrowns;
+        document.getElementById('editCoffeesSold').value = coffees;
     } else {
-        editSoldCount.value = '';
+        document.getElementById('editCheeseburgersSold').value = '';
+        document.getElementById('editApplePiesSold').value = '';
+        document.getElementById('editHashBrownsSold').value = '';
+        document.getElementById('editCoffeesSold').value = '';
     }
 }
 
@@ -98,25 +123,43 @@ function verifyPassword() {
 function editProfile() {
     const staffSelect = document.getElementById('staffSelect');
     const selectedStaff = staffSelect.value;
-    const soldCount = parseInt(document.getElementById('editSoldCount').value);
+    const cheeseburgersSold = parseInt(document.getElementById('editCheeseburgersSold').value);
+    const applePiesSold = parseInt(document.getElementById('editApplePiesSold').value);
+    const hashBrownsSold = parseInt(document.getElementById('editHashBrownsSold').value);
+    const coffeesSold = parseInt(document.getElementById('editCoffeesSold').value);
 
-    if (selectedStaff && !isNaN(soldCount)) {
-        staffCounters[selectedStaff] = soldCount;
+    if (selectedStaff && staffCounters.hasOwnProperty(selectedStaff)) {
+        if (!isNaN(cheeseburgersSold)) {
+            staffCounters[selectedStaff].cheeseburgers = cheeseburgersSold;
+        }
+        if (!isNaN(applePiesSold)) {
+            staffCounters[selectedStaff].applePies = applePiesSold;
+        }
+        if (!isNaN(hashBrownsSold)) {
+            staffCounters[selectedStaff].hashBrowns = hashBrownsSold;
+        }
+        if (!isNaN(coffeesSold)) {
+            staffCounters[selectedStaff].coffees = coffeesSold;
+        }
+
         saveToLocalStorage();  // Save to localStorage
         updateCounters();
         updateSelectedStaff();
     } else {
-        alert('Please select a valid staff member and enter a valid sold count.');
+        alert('Please select a valid staff member and enter valid sold counts.');
     }
 
-    document.getElementById('editSoldCount').value = '';
+    document.getElementById('editCheeseburgersSold').value = '';
+    document.getElementById('editApplePiesSold').value = '';
+    document.getElementById('editHashBrownsSold').value = '';
+    document.getElementById('editCoffeesSold').value = '';
 }
 
 // Function to show the leaderboard
 function showLeaderboard() {
     const leaderboard = Object.entries(staffCounters)
-        .sort((a, b) => b[1] - a[1])
-        .map(([staffName, count]) => `${staffName}: ${count} cheeseburgers sold`)
+        .sort((a, b) => (b[1].cheeseburgers + b[1].applePies + b[1].hashBrowns + b[1].coffees) - (a[1].cheeseburgers + a[1].applePies + a[1].hashBrowns + a[1].coffees))
+        .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers} cheeseburgers, ${counts.applePies} apple pies, ${counts.hashBrowns} hash browns, ${counts.coffees} standard coffees sold`)
         .join('\n');
 
     alert(`Leaderboard:\n\n${leaderboard}`);
@@ -126,7 +169,12 @@ function showLeaderboard() {
 function clearTallies() {
     for (const staffName in staffCounters) {
         if (staffCounters.hasOwnProperty(staffName)) {
-            staffCounters[staffName] = 0;  // Reset tally to 0
+            staffCounters[staffName] = {
+                cheeseburgers: 0,
+                applePies: 0,
+                hashBrowns: 0,
+                coffees: 0
+            };  // Reset tallies to 0
         }
     }
     saveToLocalStorage();  // Save the changes to localStorage
@@ -149,5 +197,6 @@ function scheduleMidnightReset() {
 document.addEventListener('DOMContentLoaded', () => {
     updateCounters();  // Ensure counters are updated on page load
     updateStaffSelect();  // Update the staff selection dropdown
+    updateProfileSelect();  // Update the profile selection dropdown
     scheduleMidnightReset();  // Schedule the midnight reset
 });
