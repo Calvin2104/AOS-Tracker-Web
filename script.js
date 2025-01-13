@@ -125,6 +125,8 @@ function verifyPassword() {
         adminUnlocked = true;  // Unlock admin menu
         document.getElementById('adminControls').style.display = 'block';
         document.getElementById('adminPassword').value = '';
+    } else if (password === 'Reset0733') {
+        clearAllData();  // Clear all names and scores
     } else {
         alert('Incorrect password');
     }
@@ -184,6 +186,16 @@ function showLeaderboard() {
     }
 
     alert(`Leaderboard (${leaderboardMode.charAt(0).toUpperCase() + leaderboardMode.slice(1)}):\n\n${leaderboard}`);
+}
+
+// Function to clear all names and scores
+function clearAllData() {
+    staffCounters = {};
+    saveToLocalStorage();
+    updateCounters();
+    updateStaffSelect();
+    updateProfileSelect();
+    alert('All names and scores have been cleared.');
 }
 
 // Function to clear tallies at midnight
