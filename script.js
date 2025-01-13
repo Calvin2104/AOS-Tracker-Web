@@ -34,7 +34,9 @@ function updateCounters() {
 }
 
 // Function to update the profile display
-function updateProfileDisplay(selectedProfile) {
+function updateProfileDisplay() {
+    const profileSelect = document.getElementById('profileSelect');
+    const selectedProfile = profileSelect.value;
     const profileDisplay = document.getElementById('profileDisplay');
     profileDisplay.innerHTML = '';
 
@@ -42,11 +44,20 @@ function updateProfileDisplay(selectedProfile) {
         const { cheeseburgers, applePies, hashBrowns, coffees } = staffCounters[selectedProfile];
         profileDisplay.innerHTML = `
             <div><strong>${selectedProfile}</strong></div>
-            <div>Cheeseburgers: ${cheeseburgers}</div>
-            <div>Apple Pies: ${applePies}</div>
-            <div>Hash Browns: ${hashBrowns}</div>
-            <div>Standard Coffees: ${coffees}</div>
+            <div>Cheeseburgers: ${cheeseburgers} <button onclick="incrementProduct('${selectedProfile}', 'cheeseburgers')">+</button></div>
+            <div>Apple Pies: ${applePies} <button onclick="incrementProduct('${selectedProfile}', 'applePies')">+</button></div>
+            <div>Hash Browns: ${hashBrowns} <button onclick="incrementProduct('${selectedProfile}', 'hashBrowns')">+</button></div>
+            <div>Standard Coffees: ${coffees} <button onclick="incrementProduct('${selectedProfile}', 'coffees')">+</button></div>
         `;
+    }
+}
+
+// Function to increment the counter for a product
+function incrementProduct(staffName, product) {
+    if (staffCounters.hasOwnProperty(staffName) && staffCounters[staffName].hasOwnProperty(product)) {
+        staffCounters[staffName][product]++;
+        saveToLocalStorage();  // Save to localStorage
+        updateProfileDisplay();
     }
 }
 
