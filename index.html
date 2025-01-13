@@ -31,6 +31,8 @@
         <div id="profileDisplay"></div>
 
         <button id="adminMenuButton" onclick="toggleAdminMenu()">Admin Menu</button>
+        
+        <button id="leaderboardButton" onclick="showLeaderboardMenu()">Leaderboard</button>
 
         <div id="adminMenu" style="display: none;">
             <h2>Admin Menu</h2>
@@ -47,6 +49,18 @@
                 <input type="number" id="editCoffeesSold" placeholder="Enter standard coffees sold">
                 <button onclick="editProfile()">Edit</button>
             </div>
+        </div>
+
+        <div id="leaderboardMenu" style="display: none;">
+            <h2>Leaderboard</h2>
+            <select id="leaderboardMode">
+                <option value="total">Total</option>
+                <option value="cheeseburgers">Cheeseburgers</option>
+                <option value="applePies">Apple Pies</option>
+                <option value="hashBrowns">Hash Browns</option>
+                <option value="coffees">Standard Coffees</option>
+            </select>
+            <button onclick="showLeaderboard()">Show Leaderboard</button>
         </div>
     </div>
 
