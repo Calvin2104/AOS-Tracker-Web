@@ -22,9 +22,16 @@
             <button onclick="addStaff()">Add Staff</button>
         </div>
 
+        <div>
+            <select id="staffSelect" onchange="updateSelectedStaff()">
+                <option value="">Select Staff Member</option>
+            </select>
+        </div>
+
         <div id="staffCounters"></div>
 
         <button onclick="toggleAdminMenu()">Admin Menu</button>
+        <button onclick="showLeaderboard()">Show Leaderboard</button>
 
         <div id="adminMenu" style="display: none;">
             <h2>Admin Menu</h2>
@@ -32,8 +39,6 @@
             <button onclick="verifyPassword()">Login</button>
             <div id="adminControls" style="display: none;">
                 <h3>Edit Profile</h3>
-                <input type="text" id="editStaffName" placeholder="Enter current staff name">
-                <input type="text" id="newStaffName" placeholder="Enter new staff name (optional)">
                 <input type="number" id="editSoldCount" placeholder="Enter sold count">
                 <button onclick="editProfile()">Edit</button>
             </div>
