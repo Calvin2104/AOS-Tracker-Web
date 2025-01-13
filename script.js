@@ -168,12 +168,22 @@ function editProfile() {
 
 // Function to show the leaderboard
 function showLeaderboard() {
-    const leaderboard = Object.entries(staffCounters)
-        .sort((a, b) => (b[1].cheeseburgers + b[1].applePies + b[1].hashBrowns + b[1].coffees) - (a[1].cheeseburgers + a[1].applePies + a[1].hashBrowns + a[1].coffees))
-        .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers} cheeseburgers, ${counts.applePies} apple pies, ${counts.hashBrowns} hash browns, ${counts.coffees} standard coffees sold`)
-        .join('\n');
+    const leaderboardMode = document.getElementById('leaderboardMode').value;
+    
+    let leaderboard = '';
+    if (leaderboardMode === 'total') {
+        leaderboard = Object.entries(staffCounters)
+            .sort((a, b) => (b[1].cheeseburgers + b[1].applePies + b[1].hashBrowns + b[1].coffees) - (a[1].cheeseburgers + a[1].applePies + a[1].hashBrowns + a[1].coffees))
+            .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers} cheeseburgers, ${counts.applePies} apple pies, ${counts.hashBrowns} hash browns, ${counts.coffees} standard coffees sold`)
+            .join('\n');
+    } else {
+        leaderboard = Object.entries(staffCounters)
+            .sort((a, b) => b[1][leaderboardMode] - a[1][leaderboardMode])
+            .map(([staffName, counts]) => `${staffName}: ${counts[leaderboardMode]} ${leaderboardMode}`)
+            .join('\n');
+    }
 
-    alert(`Leaderboard:\n\n${leaderboard}`);
+    alert(`Leaderboard (${leaderboardMode.charAt(0).toUpperCase() + leaderboardMode.slice(1)}):\n\n${leaderboard}`);
 }
 
 // Function to clear tallies at midnight
