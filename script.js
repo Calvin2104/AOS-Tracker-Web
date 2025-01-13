@@ -224,8 +224,10 @@ function scheduleMidnightReset() {
     midnight.setHours(24, 0, 0, 0);  // Set to next midnight
 
     const timeUntilMidnight = midnight.getTime() - now.getTime();  // Calculate time until midnight
-
+    console.log(`Current time: ${now}`);
+    console.log(`Midnight time: ${midnight}`);
     console.log(`Time until midnight: ${timeUntilMidnight} ms`);
+
     setTimeout(clearTallies, timeUntilMidnight);  // Schedule the reset
 }
 
