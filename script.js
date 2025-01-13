@@ -199,6 +199,20 @@ function clearAllData() {
     alert('All names and scores have been cleared.');
 }
 
+// Function to schedule the reset at midnight
+function scheduleMidnightReset() {
+    const now = new Date();
+    const midnight = new Date(now);
+    midnight.setHours(24, 0, 0, 0);  // Set to the start of the next day (midnight)
+
+    const timeUntilMidnight = midnight.getTime() - now.getTime();  // Calculate time until midnight
+    console.log(`Current time: ${now}`);
+    console.log(`Midnight time: ${midnight}`);
+    console.log(`Time until midnight: ${timeUntilMidnight} ms`);
+
+    setTimeout(clearTallies, timeUntilMidnight);  // Schedule the reset
+}
+
 // Function to clear tallies at midnight
 function clearTallies() {
     console.log('Clearing tallies at midnight');
@@ -215,20 +229,6 @@ function clearTallies() {
     saveToLocalStorage();  // Save the changes to localStorage
     updateCounters();  // Update the display
     scheduleMidnightReset();  // Schedule the next reset
-}
-
-// Function to schedule the reset at midnight
-function scheduleMidnightReset() {
-    const now = new Date();
-    const midnight = new Date();
-    midnight.setHours(24, 0, 0, 0);  // Set to next midnight
-
-    const timeUntilMidnight = midnight.getTime() - now.getTime();  // Calculate time until midnight
-    console.log(`Current time: ${now}`);
-    console.log(`Midnight time: ${midnight}`);
-    console.log(`Time until midnight: ${timeUntilMidnight} ms`);
-
-    setTimeout(clearTallies, timeUntilMidnight);  // Schedule the reset
 }
 
 // Schedule the first reset when the script is loaded
