@@ -1,4 +1,5 @@
 let staffCounters = JSON.parse(localStorage.getItem('staffCounters')) || {};
+let adminUnlocked = false;  // Track if admin menu is unlocked
 
 // Function to save the current state of staffCounters to localStorage
 function saveToLocalStorage() {
@@ -12,6 +13,7 @@ function addStaff() {
         staffCounters[staffName] = 0;
         saveToLocalStorage();  // Save to localStorage
         updateCounters();
+        updateStaffSelect();
     } else {
         alert('Please enter a unique staff name.');
     }
@@ -42,16 +44,49 @@ function updateCounters() {
     }
 }
 
+// Function to update the staff selection dropdown
+function updateStaffSelect() {
+    const staffSelect = document.getElementById('staffSelect');
+    staffSelect.innerHTML = '<option value="">Select Staff Member</option>';
+
+    for (const staffName of Object.keys(staffCounters)) {
+        const option = document.createElement('option');
+        option.value = staffName;
+        option.textContent = staffName;
+        staffSelect.appendChild(option);
+    }
+}
+
+// Function to update the selected staff member
+function updateSelectedStaff() {
+    const staffSelect = document.getElementById('staffSelect');
+    const selectedStaff = staffSelect.value;
+    const editSoldCount = document.getElementById('editSoldCount');
+
+    if (selectedStaff) {
+        editSoldCount.value = staffCounters[selectedStaff];
+    } else {
+        editSoldCount.value = '';
+    }
+}
+
 // Function to toggle the admin menu visibility
 function toggleAdminMenu() {
     const adminMenu = document.getElementById('adminMenu');
     adminMenu.style.display = adminMenu.style.display === 'none' ? 'block' : 'none';
+
+    if (adminMenu.style.display === 'none') {
+        adminUnlocked = false;  // Lock admin menu when closed
+        document.getElementById('adminControls').style.display = 'none';
+        document.getElementById('adminPassword').value = '';
+    }
 }
 
 // Function to verify the admin password
 function verifyPassword() {
     const password = document.getElementById('adminPassword').value;
     if (password === 'admin') {
+        adminUnlocked = true;  // Unlock admin menu
         document.getElementById('adminControls').style.display = 'block';
         document.getElementById('adminPassword').value = '';
     } else {
@@ -61,29 +96,30 @@ function verifyPassword() {
 
 // Function to edit a profile
 function editProfile() {
-    const currentStaffName = document.getElementById('editStaffName').value.trim();
-    const newStaffName = document.getElementById('newStaffName').value.trim();
+    const staffSelect = document.getElementById('staffSelect');
+    const selectedStaff = staffSelect.value;
     const soldCount = parseInt(document.getElementById('editSoldCount').value);
 
-    if (currentStaffName && staffCounters.hasOwnProperty(currentStaffName)) {
-        if (!isNaN(soldCount)) {
-            staffCounters[currentStaffName] = soldCount;
-        }
-
-        if (newStaffName && !staffCounters.hasOwnProperty(newStaffName)) {
-            staffCounters[newStaffName] = staffCounters[currentStaffName];
-            delete staffCounters[currentStaffName];
-        }
-
+    if (selectedStaff && !isNaN(soldCount)) {
+        staffCounters[selectedStaff] = soldCount;
         saveToLocalStorage();  // Save to localStorage
         updateCounters();
+        updateSelectedStaff();
     } else {
-        alert('Please enter a valid current staff name.');
+        alert('Please select a valid staff member and enter a valid sold count.');
     }
 
-    document.getElementById('editStaffName').value = '';
-    document.getElementById('newStaffName').value = '';
     document.getElementById('editSoldCount').value = '';
+}
+
+// Function to show the leaderboard
+function showLeaderboard() {
+    const leaderboard = Object.entries(staffCounters)
+        .sort((a, b) => b[1] - a[1])
+        .map(([staffName, count]) => `${staffName}: ${count} cheeseburgers sold`)
+        .join('\n');
+
+    alert(`Leaderboard:\n\n${leaderboard}`);
 }
 
 // Function to clear tallies at midnight
@@ -112,5 +148,6 @@ function scheduleMidnightReset() {
 // Schedule the first reset when the script is loaded
 document.addEventListener('DOMContentLoaded', () => {
     updateCounters();  // Ensure counters are updated on page load
+    updateStaffSelect();  // Update the staff selection dropdown
     scheduleMidnightReset();  // Schedule the midnight reset
 });
