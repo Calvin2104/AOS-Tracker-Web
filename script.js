@@ -3,6 +3,7 @@ let adminUnlocked = false;  // Track if admin menu is unlocked
 
 // Function to save the current state of staffCounters to localStorage
 function saveToLocalStorage() {
+    console.log('Saving to local storage:', staffCounters);
     localStorage.setItem('staffCounters', JSON.stringify(staffCounters));
 }
 
@@ -200,6 +201,7 @@ function clearAllData() {
 
 // Function to clear tallies at midnight
 function clearTallies() {
+    console.log('Clearing tallies at midnight');
     for (const staffName in staffCounters) {
         if (staffCounters.hasOwnProperty(staffName)) {
             staffCounters[staffName] = {
@@ -223,6 +225,7 @@ function scheduleMidnightReset() {
 
     const timeUntilMidnight = midnight.getTime() - now.getTime();  // Calculate time until midnight
 
+    console.log(`Time until midnight: ${timeUntilMidnight} ms`);
     setTimeout(clearTallies, timeUntilMidnight);  // Schedule the reset
 }
 
