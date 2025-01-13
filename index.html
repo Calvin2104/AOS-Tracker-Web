@@ -31,7 +31,17 @@
         <div id="profileDisplay"></div>
 
         <button onclick="toggleAdminMenu()">Admin Menu</button>
-        <button onclick="showLeaderboard()">Show Leaderboard</button>
+        
+        <div>
+            <select id="leaderboardMode">
+                <option value="total">Total</option>
+                <option value="cheeseburgers">Cheeseburgers</option>
+                <option value="applePies">Apple Pies</option>
+                <option value="hashBrowns">Hash Browns</option>
+                <option value="coffees">Standard Coffees</option>
+            </select>
+            <button onclick="showLeaderboard()">Show Leaderboard</button>
+        </div>
 
         <div id="adminMenu" style="display: none;">
             <h2>Admin Menu</h2>
