@@ -23,12 +23,12 @@
         </div>
 
         <div>
-            <select id="staffSelect" onchange="updateSelectedStaff()">
-                <option value="">Select Staff Member</option>
+            <select id="profileSelect" onchange="updateProfileDisplay()">
+                <option value="">Select Profile</option>
             </select>
         </div>
 
-        <div id="staffCounters"></div>
+        <div id="profileDisplay"></div>
 
         <button onclick="toggleAdminMenu()">Admin Menu</button>
         <button onclick="showLeaderboard()">Show Leaderboard</button>
@@ -38,8 +38,14 @@
             <input type="password" id="adminPassword" placeholder="Enter admin password">
             <button onclick="verifyPassword()">Login</button>
             <div id="adminControls" style="display: none;">
+                <select id="staffSelect" onchange="updateSelectedStaff()">
+                    <option value="">Select Staff Member</option>
+                </select>
                 <h3>Edit Profile</h3>
-                <input type="number" id="editSoldCount" placeholder="Enter sold count">
+                <input type="number" id="editCheeseburgersSold" placeholder="Enter cheeseburgers sold">
+                <input type="number" id="editApplePiesSold" placeholder="Enter apple pies sold">
+                <input type="number" id="editHashBrownsSold" placeholder="Enter hash browns sold">
+                <input type="number" id="editCoffeesSold" placeholder="Enter standard coffees sold">
                 <button onclick="editProfile()">Edit</button>
             </div>
         </div>
