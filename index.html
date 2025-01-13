@@ -9,7 +9,7 @@
     <!-- Set the status bar style -->
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Cheeseburger Counter</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -17,7 +17,7 @@
     <div class="container">
         <h1>Cheeseburger Counter</h1>
 
-        <div class="staff-input">
+        <div id="staffMenu" class="menu">
             <input type="text" id="staffName" placeholder="Enter staff name">
             <button onclick="addStaff()">Add Staff</button>
         </div>
@@ -30,18 +30,7 @@
 
         <div id="profileDisplay"></div>
 
-        <button onclick="toggleAdminMenu()">Admin Menu</button>
-        
-        <div>
-            <select id="leaderboardMode">
-                <option value="total">Total</option>
-                <option value="cheeseburgers">Cheeseburgers</option>
-                <option value="applePies">Apple Pies</option>
-                <option value="hashBrowns">Hash Browns</option>
-                <option value="coffees">Standard Coffees</option>
-            </select>
-            <button onclick="showLeaderboard()">Show Leaderboard</button>
-        </div>
+        <button id="adminMenuButton" onclick="toggleAdminMenu()">Admin Menu</button>
 
         <div id="adminMenu" style="display: none;">
             <h2>Admin Menu</h2>
