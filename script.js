@@ -125,6 +125,11 @@ function showLeaderboardMenu() {
     leaderboardMenu.style.display = leaderboardMenu.style.display === 'none' ? 'block' : 'none';
 }
 
+// Function to show credits
+function showCredits() {
+    alert("Developer: Calvin Rayer\nSupporter: Stephanie Buckholz\nDesigned for Bundy City\nHosted on GitHub Pages");
+}
+
 // Function to verify the admin password
 function verifyPassword() {
     const password = document.getElementById('adminPassword').value;
