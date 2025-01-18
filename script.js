@@ -127,7 +127,7 @@ function showLeaderboardMenu() {
 
 // Function to show credits
 function showCredits() {
-    alert("Developed by: Calvin Rayer\nA big thank you to Stephanie Buckholz. You've always helped and supported everyone in the workplace and we couldn't be more grateful for everything you've done for us. We will miss you deeply, and wish you the best for your future endeavours.\nLove from, Bundaberg City Maccas\n \nFree for use in all Australian Restuarants");
+    alert("Developed by: Calvin Rayer\nA big thank you to Stephanie Buckholz. You've always supported everyone in the workplace and we couldn't be more grateful for everything you've done for us. We will miss you deeply, and wish you the best for your future endeavours.\nLove from, Bundaberg City Maccas.\n_________________________________\nFree for use in all Australian Restuarants");
 }
 
 // Function to verify the admin password
