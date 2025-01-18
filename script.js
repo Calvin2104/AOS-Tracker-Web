@@ -127,7 +127,7 @@ function showLeaderboardMenu() {
 
 // Function to show credits
 function showCredits() {
-    alert("Developer: Calvin Rayer\nSupporter: Stephanie Buckholz\nDesigned for Bundy City\nHosted on GitHub Pages");
+    alert("Developed outside of work by: Calvin Rayer\nA big thank you to Stephanie Buckholz. You always helped and supported me and everyone else in the workplace and we couldn't be more grateful for everyhthing you've done. We will miss you deeply, and wish you the best for your future.\nLove you, from Bundaberg City Maccas\nFree for use in all Australian Restuarants");
 }
 
 // Function to verify the admin password
