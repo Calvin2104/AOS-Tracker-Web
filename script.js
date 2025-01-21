@@ -1,17 +1,17 @@
-let staffCounters = JSON.parse(localStorage.getItem('staffCounters')) || {};
+let staffData = JSON.parse(localStorage.getItem('staffData')) || { current: {}, history: {} };
 let adminUnlocked = false;  // Track if admin menu is unlocked
 
-// Function to save the current state of staffCounters to localStorage
+// Function to save the current state of staffData to localStorage
 function saveToLocalStorage() {
-    console.log('Saving to local storage:', staffCounters);
-    localStorage.setItem('staffCounters', JSON.stringify(staffCounters));
+    console.log('Saving to local storage:', staffData);
+    localStorage.setItem('staffData', JSON.stringify(staffData));
 }
 
 // Function to add a new staff member
 function addStaff() {
     const staffName = document.getElementById('staffName').value.trim();
-    if (staffName && !staffCounters.hasOwnProperty(staffName)) {
-        staffCounters[staffName] = {
+    if (staffName && !staffData.current.hasOwnProperty(staffName)) {
+        staffData.current[staffName] = {
             cheeseburgers: 0,
             applePies: 0,
             hashBrowns: 0,
@@ -41,8 +41,8 @@ function updateProfileDisplay() {
     const profileDisplay = document.getElementById('profileDisplay');
     profileDisplay.innerHTML = '';
 
-    if (selectedProfile && staffCounters.hasOwnProperty(selectedProfile)) {
-        const { cheeseburgers, applePies, hashBrowns, coffees } = staffCounters[selectedProfile];
+    if (selectedProfile && staffData.current.hasOwnProperty(selectedProfile)) {
+        const { cheeseburgers, applePies, hashBrowns, coffees } = staffData.current[selectedProfile];
         profileDisplay.innerHTML = `
             <div><strong>${selectedProfile}</strong></div>
             <div>Cheeseburgers: ${cheeseburgers} <button onclick="incrementProduct('${selectedProfile}', 'cheeseburgers')">+</button></div>
@@ -55,8 +55,8 @@ function updateProfileDisplay() {
 
 // Function to increment the counter for a product
 function incrementProduct(staffName, product) {
-    if (staffCounters.hasOwnProperty(staffName) && staffCounters[staffName].hasOwnProperty(product)) {
-        staffCounters[staffName][product]++;
+    if (staffData.current.hasOwnProperty(staffName) && staffData.current[staffName].hasOwnProperty(product)) {
+        staffData.current[staffName][product]++;
         saveToLocalStorage();  // Save to localStorage
         updateProfileDisplay();
     }
@@ -67,7 +67,7 @@ function updateStaffSelect() {
     const staffSelect = document.getElementById('staffSelect');
     staffSelect.innerHTML = '<option value="">Select Staff Member</option>';
 
-    for (const staffName of Object.keys(staffCounters)) {
+    for (const staffName of Object.keys(staffData.current)) {
         const option = document.createElement('option');
         option.value = staffName;
         option.textContent = staffName;
@@ -80,7 +80,7 @@ function updateProfileSelect() {
     const profileSelect = document.getElementById('profileSelect');
     profileSelect.innerHTML = '<option value="">Select Profile</option>';
 
-    for (const staffName of Object.keys(staffCounters)) {
+    for (const staffName of Object.keys(staffData.current)) {
         const option = document.createElement('option');
         option.value = staffName;
         option.textContent = staffName;
@@ -93,8 +93,8 @@ function updateSelectedStaff() {
     const staffSelect = document.getElementById('staffSelect');
     const selectedStaff = staffSelect.value;
 
-    if (selectedStaff && staffCounters.hasOwnProperty(selectedStaff)) {
-        const { cheeseburgers, applePies, hashBrowns, coffees } = staffCounters[selectedStaff];
+    if (selectedStaff && staffData.current.hasOwnProperty(selectedStaff)) {
+        const { cheeseburgers, applePies, hashBrowns, coffees } = staffData.current[selectedStaff];
         document.getElementById('editCheeseburgersSold').value = cheeseburgers;
         document.getElementById('editApplePiesSold').value = applePies;
         document.getElementById('editHashBrownsSold').value = hashBrowns;
@@ -117,24 +117,6 @@ function toggleAdminMenu() {
         document.getElementById('adminControls').style.display = 'none';
         document.getElementById('adminPassword').value = '';
     }
-}
-
-// Function to toggle the leaderboard menu visibility
-function showLeaderboardMenu() {
-    const leaderboardMenu = document.getElementById('leaderboardMenu');
-    leaderboardMenu.style.display = leaderboardMenu.style.display === 'none' ? 'block' : 'none';
-}
-
-// Function to show credits
-function showCredits() {
-    const creditsModal = document.getElementById('creditsModal');
-    creditsModal.style.display = 'block';
-}
-
-// Function to close credits
-function closeCredits() {
-    const creditsModal = document.getElementById('creditsModal');
-    creditsModal.style.display = 'none';
 }
 
 // Function to verify the admin password
@@ -160,18 +142,18 @@ function editProfile() {
     const hashBrownsSold = parseInt(document.getElementById('editHashBrownsSold').value);
     const coffeesSold = parseInt(document.getElementById('editCoffeesSold').value);
 
-    if (selectedStaff && staffCounters.hasOwnProperty(selectedStaff)) {
+    if (selectedStaff && staffData.current.hasOwnProperty(selectedStaff)) {
         if (!isNaN(cheeseburgersSold)) {
-            staffCounters[selectedStaff].cheeseburgers = cheeseburgersSold;
+            staffData.current[selectedStaff].cheeseburgers = cheeseburgersSold;
         }
         if (!isNaN(applePiesSold)) {
-            staffCounters[selectedStaff].applePies = applePiesSold;
+            staffData.current[selectedStaff].applePies = applePiesSold;
         }
         if (!isNaN(hashBrownsSold)) {
-            staffCounters[selectedStaff].hashBrowns = hashBrownsSold;
+            staffData.current[selectedStaff].hashBrowns = hashBrownsSold;
         }
         if (!isNaN(coffeesSold)) {
-            staffCounters[selectedStaff].coffees = coffeesSold;
+            staffData.current[selectedStaff].coffees = coffeesSold;
         }
 
         saveToLocalStorage();  // Save to localStorage
@@ -193,12 +175,12 @@ function showLeaderboard() {
     
     let leaderboard = '';
     if (leaderboardMode === 'total') {
-        leaderboard = Object.entries(staffCounters)
+        leaderboard = Object.entries(staffData.current)
             .sort((a, b) => (b[1].cheeseburgers + b[1].applePies + b[1].hashBrowns + b[1].coffees) - (a[1].cheeseburgers + a[1].applePies + a[1].hashBrowns + a[1].coffees))
             .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers + counts.applePies + counts.hashBrowns + counts.coffees} items sold`)
             .join('\n');
     } else {
-        leaderboard = Object.entries(staffCounters)
+        leaderboard = Object.entries(staffData.current)
             .sort((a, b) => b[1][leaderboardMode] - a[1][leaderboardMode])
             .map(([staffName, counts]) => `${staffName}: ${counts[leaderboardMode]} ${leaderboardMode}`)
             .join('\n');
@@ -209,7 +191,7 @@ function showLeaderboard() {
 
 // Function to clear all names and scores
 function clearAllData() {
-    staffCounters = {};
+    staffData = { current: {}, history: {} };
     saveToLocalStorage();
     updateCounters();
     updateStaffSelect();
@@ -217,12 +199,19 @@ function clearAllData() {
     alert('All names and scores have been cleared.');
 }
 
-// Function to clear tallies at midnight
+// Function to clear tallies at midnight and save to history
 function clearTallies() {
-    console.log('Clearing tallies at midnight');
-    for (const staffName in staffCounters) {
-        if (staffCounters.hasOwnProperty(staffName)) {
-            staffCounters[staffName] = {
+    console.log('Clearing tallies at midnight and saving to history');
+    const now = new Date();
+    const dateStr = now.toISOString().split('T')[0];  // Get current date in YYYY-MM-DD format
+
+    // Save current tallies to history
+    staffData.history[dateStr] = JSON.parse(JSON.stringify(staffData.current));
+
+    // Clear current tallies
+    for (const staffName in staffData.current) {
+        if (staffData.current.hasOwnProperty(staffName)) {
+            staffData.current[staffName] = {
                 cheeseburgers: 0,
                 applePies: 0,
                 hashBrowns: 0,
@@ -230,6 +219,7 @@ function clearTallies() {
             };  // Reset tallies to 0
         }
     }
+
     saveToLocalStorage();  // Save the changes to localStorage
     updateCounters();  // Update the display
     scheduleMidnightReset();  // Schedule the next reset
@@ -247,6 +237,24 @@ function scheduleMidnightReset() {
     console.log(`Time until midnight: ${timeUntilMidnight} ms`);
 
     setTimeout(clearTallies, timeUntilMidnight);  // Schedule the reset
+}
+
+// Function to show historical data
+function showHistoricalData() {
+    const dateStr = prompt("Enter the date (YYYY-MM-DD) for which you want to view the data:");
+    if (staffData.history.hasOwnProperty(dateStr)) {
+        const data = staffData.history[dateStr];
+        let displayData = `Data for ${dateStr}:\n\n`;
+        for (const staffName in data) {
+            if (data.hasOwnProperty(staffName)) {
+                const { cheeseburgers, applePies, hashBrowns, coffees } = data[staffName];
+                displayData += `${staffName}:\n  Cheeseburgers: ${cheeseburgers}\n  Apple Pies: ${applePies}\n  Hash Browns: ${hashBrowns}\n  Coffees: ${coffees}\n\n`;
+            }
+        }
+        alert(displayData);
+    } else {
+        alert("No data found for the specified date.");
+    }
 }
 
 // Schedule the first reset when the script is loaded
