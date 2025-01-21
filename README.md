@@ -1,4 +1,6 @@
-Updates will be posted to https://www.facebook.com/profile.php?id=61572348632360
+Update info will be posted to https://www.facebook.com/profile.php?id=61572348632360
+
+This website will work in your restuarant based off honesty. Please no cheating. :)
 
 YOLO i dont really know how github works tbh cause I usually use local programs.
 I'm gonna start a change log of like, all the stuff I've done on here but im pretty sure you can already see most of it through commit changes or something.
@@ -15,7 +17,7 @@ Now, the features we have so far are:
 - Mulitple trackable AOS items
 - Reset and admin passwords (for clearing all data with update incompatabilities, OR modifying sales counts)
 - Leaderboard for totals or individual items
-- ALL TALLIES RESET AT MIDNIGHT. (see Replacements for more info)
+- ~~ALL TALLIES RESET AT MIDNIGHT.~~ (see Replacements for more info)
 
 More to come (HOPEFULLY, no garuntees):
 - Store profiles + server storage (so stores can compare and compete, etc.)
@@ -23,7 +25,7 @@ More to come (HOPEFULLY, no garuntees):
 - A BIG BIG ONE ----> A remote viewer, so a laptop, TV, etc. can be used to display the stores statistics on the local network.
 
 Replacements:
-- Instead of clearing tallies at midnight, I am going to introduce daily counts, so after the day is over only an admin can modify the product count, but most like unnecessary.
+- Instead of clearing tallies at midnight, I am going to introduce daily counts, so after the day is over only an admin can modify the product count, but most like unnecessary. ☑️🟩 (hisorical data implementation complete, no admin modifications though)
 - Admin passwords are currently customised for my home store, so will become a generic one for use across all maccas
 - Instead of using browser "says" protocol, we will opt for pop-ups within the sites UI.
 
