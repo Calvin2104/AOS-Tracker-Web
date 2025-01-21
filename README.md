@@ -27,7 +27,7 @@ More to come (HOPEFULLY, no garuntees):
 Replacements:
 - Instead of clearing tallies at midnight, I am going to introduce daily counts, so after the day is over only an admin can modify the product count, but most like unnecessary. ☑️🟩 (hisorical data implementation complete, no admin modifications though)
 - Admin passwords are currently customised for my home store, so will become a generic one for use across all maccas
-- Instead of using browser "says" protocol, we will opt for pop-ups within the sites UI.
+- Instead of using browser "says" protocol, we will opt for pop-ups within the sites UI. ☑️🟩 (credit implementation for testing. will expand to more pop-ups like leaderboard + historical data eventually)
 
 
 
