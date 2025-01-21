@@ -29,5 +29,5 @@ Replacements:
 
 
 
-Okay now that's all the technical jargon out of the way, please donate. joking, I make enough money already.
-Feel free to use this in your store if you want, I ain't stopping you. BUT, beware some features may still be unstable as I'm actively modifying the site almost daily.
+Okay now that's all the technical jargon out of the way, please donate. joking, this is free for all.
+use this in your store if you want, I ain't stopping you. BUT, beware some features may still be unstable as I'm actively modifying the site almost daily, and new ones might need setup.
