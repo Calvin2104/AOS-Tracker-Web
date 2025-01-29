@@ -82,6 +82,23 @@
         </div>
     </div>
 
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeLeaderboard()">&times;</span>
+            <h2>Leaderboard</h2>
+            <select id="leaderboardMode">
+                <option value="total">Total</option>
+                <option value="cheeseburgers">Cheeseburgers</option>
+                <option value="applePies">Apple Pies</option>
+                <option value="hashBrowns">Hash Browns</option>
+                <option value="coffees">Standard Coffees</option>
+            </select>
+            <button onclick="showLeaderboard()">Show Leaderboard</button>
+            <div id="leaderboardContent"></div>
+        </div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
