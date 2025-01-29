@@ -53,16 +53,21 @@
             </div>
         </div>
 
-        <div id="leaderboardMenu" style="display: none;">
-            <h2>Leaderboard</h2>
-            <select id="leaderboardMode">
-                <option value="total">Total</option>
-                <option value="cheeseburgers">Cheeseburgers</option>
-                <option value="applePies">Apple Pies</option>
-                <option value="hashBrowns">Hash Browns</option>
-                <option value="coffees">Standard Coffees</option>
-            </select>
-            <button onclick="showLeaderboard()">Show Leaderboard</button>
+        <!-- Leaderboard Modal -->
+        <div id="leaderboardModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeLeaderboard()">&times;</span>
+                <h2>Leaderboard</h2>
+                <select id="leaderboardMode">
+                    <option value="total">Total</option>
+                    <option value="cheeseburgers">Cheeseburgers</option>
+                    <option value="applePies">Apple Pies</option>
+                    <option value="hashBrowns">Hash Browns</option>
+                    <option value="coffees">Standard Coffees</option>
+                </select>
+                <button onclick="showLeaderboard()">Show Leaderboard</button>
+                <div id="leaderboardContent"></div>
+            </div>
         </div>
 
         <button id="creditsButton" onclick="showCredits()">Credits</button>
@@ -73,29 +78,12 @@
                 <span class="close" onclick="closeCredits()">&times;</span>
                 <h2>Credits</h2>
                 <p>Developed by: Calvin Rayer</p>
-                <p>A big thank you to Stephanie Buckholz. You've always supported everyone in the workplace and we couldn't be more grateful for everything you've done for us. We will miss you deeply, and wish you the best for your future endeavours.</p>
+                <p>A big thank you to Stephanie Buckholz. You've always supported everyone in the workplace and we couldn't be more grateful for everything you've done for us. We will miss you deeply,[...]
                 <p>Love from, Bundaberg City Maccas</p>
                 <p>______________________________________</p>
                 <p>Free for use in all Australian Restaurants</p>
                 <button onclick="closeCredits()">Aww. So sweet.</button>
             </div>
-        </div>
-    </div>
-
-    <!-- Leaderboard Modal -->
-    <div id="leaderboardModal" class="modal">
-        <div class="modal-content">
-            <span class="close" onclick="closeLeaderboard()">&times;</span>
-            <h2>Leaderboard</h2>
-            <select id="leaderboardMode">
-                <option value="total">Total</option>
-                <option value="cheeseburgers">Cheeseburgers</option>
-                <option value="applePies">Apple Pies</option>
-                <option value="hashBrowns">Hash Browns</option>
-                <option value="coffees">Standard Coffees</option>
-            </select>
-            <button onclick="showLeaderboard()">Show Leaderboard</button>
-            <div id="leaderboardContent"></div>
         </div>
     </div>
 
