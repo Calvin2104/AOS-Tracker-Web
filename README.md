@@ -1,5 +1,7 @@
 Update info will be posted to https://www.facebook.com/profile.php?id=61572348632360
 
+(At some stage through development, I will switch to local testing to make the consumer experience more stable. For now, all code changes require a refresh on the site.
+
 This website will work in your restuarant based off honesty. Please no cheating. :)
 
 YOLO i dont really know how github works tbh cause I usually use local programs.
