@@ -256,4 +256,7 @@ function scheduleMidnightReset() {
     const midnight = new Date(now);
     midnight.setHours(24, 0, 0, 0);  // Set to the start of the next day (midnight)
 
-    const timeUntilMidnight = midnight.get
+    const timeUntilMidnight = midnight.getTime() - now.getTime();  // Calculate time until midnight
+    console.log(`Current time: ${now}`);
+    console.log(`Midnight time: ${midnight}`);
+    console.log(`Time until midnight: ${timeUntilMidnight} ms`);
