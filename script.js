@@ -275,6 +275,45 @@ function showHistoricalData() {
     }
 }
 
+// Existing code...
+
+// Function to show the leaderboard modal
+function showLeaderboardMenu() {
+    const leaderboardModal = document.getElementById('leaderboardModal');
+    leaderboardModal.style.display = 'block';
+}
+
+// Function to close the leaderboard modal
+function closeLeaderboard() {
+    const leaderboardModal = document.getElementById('leaderboardModal');
+    leaderboardModal.style.display = 'none';
+}
+
+// Existing code...
+
+// Function to show the leaderboard
+function showLeaderboard() {
+    const leaderboardMode = document.getElementById('leaderboardMode').value;
+    let leaderboardContent = document.getElementById('leaderboardContent');
+    leaderboardContent.innerHTML = ''; // Clear previous content
+
+    let leaderboard = '';
+    if (leaderboardMode === 'total') {
+        leaderboard = Object.entries(staffData.current)
+            .sort((a, b) => (b[1].cheeseburgers + b[1].applePies + b[1].hashBrowns + b[1].coffees) - (a[1].cheeseburgers + a[1].applePies + a[1].hashBrowns + a[1].coffees))
+            .map(([staffName, counts]) => `${staffName}: ${counts.cheeseburgers + counts.applePies + counts.hashBrowns + counts.coffees} items sold`)
+            .join('<br>');
+    } else {
+        leaderboard = Object.entries(staffData.current)
+            .sort((a, b) => b[1][leaderboardMode] - a[1][leaderboardMode])
+            .map(([staffName, counts]) => `${staffName}: ${counts[leaderboardMode]} ${leaderboardMode}`)
+            .join('<br>');
+    }
+
+    leaderboardContent.innerHTML = `Leaderboard (${leaderboardMode.charAt(0).toUpperCase() + leaderboardMode.slice(1)}):<br><br>${leaderboard}`;
+}
+
+// Existing code...
 // Schedule the first reset when the script is loaded
 document.addEventListener('DOMContentLoaded', () => {
     updateCounters();  // Ensure counters are updated on page load
