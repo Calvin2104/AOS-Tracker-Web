@@ -9,35 +9,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>AOS Tracker</title>
     <link rel="stylesheet" href="styles.css">
-    <!-- Add Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
     <div class="container">
         <h1>AOS Tracker</h1>
 
-        <!-- Authentication Forms -->
-        <div id="authContainer">
-            <div id="registerForm">
-                <h2>Register</h2>
-                <input type="email" id="registerEmail" placeholder="Email">
-                <input type="password" id="registerPassword" placeholder="Password">
-                <button onclick="register()">Register</button>
-            </div>
-            <div id="loginForm" style="display: none;">
-                <h2>Login</h2>
-                <input type="email" id="loginEmail" placeholder="Email">
-                <input type="password" id="loginPassword" placeholder="Password">
-                <button onclick="login()">Login</button>
-            </div>
-            <div id="logoutButton" style="display: none;">
-                <button onclick="logout()">Logout</button>
-            </div>
-        </div>
-
-        <div id="staffMenu" class="menu" style="display: none;">
+        <div id="staffMenu" class="menu">
             <input type="text" id="staffName" placeholder="Enter staff name">
             <button onclick="addStaff()">Add Staff</button>
         </div>
@@ -50,11 +27,11 @@
 
         <div id="profileDisplay"></div>
 
-        <button id="adminMenuButton" onclick="toggleAdminMenu()" style="display: none;">Admin Menu</button>
+        <button id="adminMenuButton" onclick="toggleAdminMenu()">Admin Menu</button>
         
-        <button id="leaderboardButton" onclick="showLeaderboardMenu()" style="display: none;">Leaderboard</button>
+        <button id="leaderboardButton" onclick="showLeaderboardMenu()">Leaderboard</button>
         
-        <button id="historicalDataButton" onclick="showHistoricalData()" style="display: none;">View Historical Data</button>
+        <button id="historicalDataButton" onclick="showHistoricalData()">View Historical Data</button>
 
         <div id="adminMenu" style="display: none;">
             <h2>Admin Menu</h2>
