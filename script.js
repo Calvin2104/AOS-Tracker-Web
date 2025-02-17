@@ -1,10 +1,133 @@
-let staffData = JSON.parse(localStorage.getItem('staffData')) || { current: {}, history: {} };
-let adminUnlocked = false;  // Track if admin menu is unlocked
+ // Your web app's Firebase configuration
+  const firebaseConfig = {
+    apiKey: "AIzaSyBymaGL4LjaAdHRQhW2a8uM7xQq9sgqRak",
+    authDomain: "aos-tracker.firebaseapp.com",
+    projectId: "aos-tracker",
+    storageBucket: "aos-tracker.firebasestorage.app",
+    messagingSenderId: "503355104840",
+    appId: "1:503355104840:web:0d2225fd45e755982d427d"
+  };
+};
 
-// Function to save the current state of staffData to localStorage
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+// Function to register a new user
+function register() {
+    const email = document.getElementById('registerEmail').value;
+    const password = document.getElementById('registerPassword').value;
+    auth.createUserWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            console.log('User registered:', userCredential.user);
+            alert('Registration successful. Please log in.');
+            toggleAuthForms();
+        })
+        .catch(error => {
+            console.error('Error registering user:', error);
+            alert('Error registering user: ' + error.message);
+        });
+}
+
+// Function to log in
+function login() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    auth.signInWithEmailAndPassword(email, password)
+        .then(userCredential => {
+            console.log('User logged in:', userCredential.user);
+            showUserContent();
+        })
+        .catch(error => {
+            console.error('Error logging in:', error);
+            alert('Error logging in: ' + error.message);
+        });
+}
+
+// Function to log out
+function logout() {
+    auth.signOut()
+        .then(() => {
+            console.log('User logged out');
+            hideUserContent();
+        })
+        .catch(error => {
+            console.error('Error logging out:', error);
+            alert('Error logging out: ' + error.message);
+        });
+}
+
+// Function to toggle between login and register forms
+function toggleAuthForms() {
+    document.getElementById('registerForm').style.display = 'none';
+    document.getElementById('loginForm').style.display = 'block';
+}
+
+// Function to show user-specific content after login
+function showUserContent() {
+    document.getElementById('authContainer').style.display = 'none';
+    document.getElementById('staffMenu').style.display = 'block';
+    document.getElementById('adminMenuButton').style.display = 'block';
+    document.getElementById('leaderboardButton').style.display = 'block';
+    document.getElementById('historicalDataButton').style.display = 'block';
+    document.getElementById('logoutButton').style.display = 'block';
+    loadUserData();
+}
+
+// Function to hide user-specific content after logout
+function hideUserContent() {
+    document.getElementById('authContainer').style.display = 'block';
+    document.getElementById('staffMenu').style.display = 'none';
+    document.getElementById('adminMenuButton').style.display = 'none';
+    document.getElementById('leaderboardButton').style.display = 'none';
+    document.getElementById('historicalDataButton').style.display = 'none';
+    document.getElementById('logoutButton').style.display = 'none';
+}
+
+// Function to load user-specific data from Firestore
+function loadUserData() {
+    const user = auth.currentUser;
+    if (user) {
+        const userId = user.uid;
+        db.collection('users').doc(userId).get()
+            .then(doc => {
+                if (doc.exists) {
+                    staffData = doc.data().staffData;
+                    updateCounters();
+                    updateStaffSelect();
+                    updateProfileSelect();
+                } else {
+                    console.log('No such document!');
+                }
+            })
+            .catch(error => {
+                console.error('Error getting document:', error);
+            });
+    }
+}
+
+// Function to save user-specific data to Firestore
+function saveToFirestore() {
+    const user = auth.currentUser;
+    if (user) {
+        const userId = user.uid;
+        db.collection('users').doc(userId).set({
+            staffData: staffData
+        })
+        .then(() => {
+            console.log('Document successfully written!');
+        })
+        .catch(error => {
+            console.error('Error writing document:', error);
+        });
+    }
+}
+
+// Override saveToLocalStorage to use Firestore
 function saveToLocalStorage() {
-    console.log('Saving to local storage:', staffData);
-    localStorage.setItem('staffData', JSON.stringify(staffData));
+    console.log('Saving to Firestore:', staffData);
+    saveToFirestore();
 }
 
 // Function to add a new staff member
@@ -17,7 +140,7 @@ function addStaff() {
             hashBrowns: 0,
             coffees: 0
         };
-        saveToLocalStorage();  // Save to localStorage
+        saveToFirestore();  // Save to Firestore
         updateCounters();
         updateStaffSelect();
         updateProfileSelect();
@@ -57,7 +180,7 @@ function updateProfileDisplay() {
 function incrementProduct(staffName, product) {
     if (staffData.current.hasOwnProperty(staffName) && staffData.current[staffName].hasOwnProperty(product)) {
         staffData.current[staffName][product]++;
-        saveToLocalStorage();  // Save to localStorage
+        saveToFirestore();  // Save to Firestore
         updateProfileDisplay();
     }
 }
@@ -180,7 +303,7 @@ function editProfile() {
             staffData.current[selectedStaff].coffees = coffeesSold;
         }
 
-        saveToLocalStorage();  // Save to localStorage
+        saveToFirestore();  // Save to Firestore
         updateCounters();
         updateSelectedStaff();
     } else {
@@ -218,7 +341,7 @@ function showLeaderboard() {
 // Function to clear all names and scores
 function clearAllData() {
     staffData = { current: {}, history: {} };
-    saveToLocalStorage();
+    saveToFirestore();
     updateCounters();
     updateStaffSelect();
     updateProfileSelect();
@@ -246,7 +369,7 @@ function clearTallies() {
         }
     }
 
-    saveToLocalStorage();  // Save the changes to localStorage
+    saveToFirestore();  // Save the changes to Firestore
     updateCounters();  // Update the display
     scheduleMidnightReset();  // Schedule the next reset
 }
@@ -282,6 +405,17 @@ function showHistoricalData() {
         alert("No data found for the specified date.");
     }
 }
+
+// Event listener for Firebase authentication state changes
+auth.onAuthStateChanged(user => {
+    if (user) {
+        console.log('User is signed in:', user);
+        showUserContent();
+    } else {
+        console.log('No user is signed in.');
+        hideUserContent();
+    }
+});
 
 // Schedule the first reset when the script is loaded
 document.addEventListener('DOMContentLoaded', () => {
